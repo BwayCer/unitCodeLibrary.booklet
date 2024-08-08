@@ -1,0 +1,31 @@
+services:
+  en:
+    image: local/uc/docker_compose/build_01/hello_en
+    build: ./vmfile__hello_en
+
+  en_v1:
+    image: local/uc/docker_compose/build_01/hello_en:v1
+    build:
+      context: ./vmfile__hello_en
+      args:
+        name: BwayCer
+
+  zh:
+    image: local/uc/docker_compose/build_01/hello_zh
+    build:
+      context: ./vmfile__hello_zh
+      dockerfile: hello.dockerfile
+
+  zh_env:
+    image: local/uc/docker_compose/build_01/hello_zh
+    depends_on:
+      - zh
+    environment:
+      NAME: 環境
+
+  zh_argu:
+    image: local/uc/docker_compose/build_01/hello_zh
+    depends_on:
+      - zh
+    command: /helloworld 參數
+
