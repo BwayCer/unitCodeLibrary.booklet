@@ -1,0 +1,12 @@
+services:
+  video:
+    image: local/uc/docker/privileged_01/video_py_cv2_imshow_01
+    build: ./vmfile__video_py_cv2_readCap_imshow_01
+    privileged: true
+    environment:
+      - DISPLAY=$DISPLAY
+      - XAUTHORITY=/tmp/xauth
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - $XAUTHORITY:/tmp/xauth
+
