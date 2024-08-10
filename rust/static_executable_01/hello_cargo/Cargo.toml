@@ -4,3 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+
+[profile.release]
+opt-level = 3     # Optimize for size.
+lto = true          # Enable Link Time Optimization
+panic = "abort"     # Abort on panic
+strip = true        # Automatically strip symbols from the binary.
