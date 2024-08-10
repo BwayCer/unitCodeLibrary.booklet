@@ -1,0 +1,7 @@
+services:
+  main:
+    image: local/uc/rust/static_executable_01
+    build:
+      context: ./hello_cargo
+      dockerfile: ./vmfile/main/Dockerfile
+
