@@ -1,0 +1,28 @@
+services:
+  container01:
+    image: alpine
+    container_name: bway_c01
+    networks:
+      - privateNetwork
+    command: tail -f /dev/null
+
+  container02:
+    image: alpine
+    container_name: bway_c02
+    networks:
+      - privateNetwork
+    links:
+      - container01:c1
+      # 自動有 `depends_on: container01` 的特性
+    command: tail -f /dev/null
+
+  container03:
+    image: alpine
+    container_name: bway_c03
+    networks:
+      - privateNetwork
+    command: tail -f /dev/null
+
+
+networks:
+  privateNetwork:
