@@ -19,14 +19,14 @@ echo "\$ ${cmdList[*]}"
 "${cmdList[@]}"
 
 
-echo -e "\n\n# 從 c02 容器 ping c01 容器"
+echo -e "\n\n# 從 c02 容器 ping c01 容器的 link 別名"
 cmdList=(docker exec bway_c02 ping c1 -c 2)
 echo "\$ ${cmdList[*]}"
 "${cmdList[@]}"
 
 
-echo -e "\n\n# 從 c03 容器 ping c01 容器"
-cmdList=(docker exec bway_c03 ping c1 -c 2)
+echo -e "\n\n# 從 c03 容器 ping c01 容器的 compose 別名"
+cmdList=(docker exec bway_c03 ping container01 -c 2)
 echo "\$ ${cmdList[*]}"
 "${cmdList[@]}"
 
