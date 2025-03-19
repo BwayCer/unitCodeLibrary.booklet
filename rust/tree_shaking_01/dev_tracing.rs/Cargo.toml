@@ -3,4 +3,31 @@ name = "dev_tracing"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "code_1common_1nothing"
+path = "src/code_common_nothing.rs"
+
+[[bin]]
+name = "code_1common_2subscriber"
+path = "src/code_common_subscriber.rs"
+
+[[bin]]
+name = "code_1common_3print"
+path = "src/code_common_print.rs"
+
+[[bin]]
+name = "code_2dead_4notprint"
+path = "src/code_dead_notprint.rs"
+
+[[bin]]
+name = "code_2dead_5notsubscriber_print"
+path = "src/code_dead_notsubscriber_print.rs"
+
+[[bin]]
+name = "code_3shaking_3print"
+path = "src/code_shaking_print.rs"
+
 [dependencies]
+cfg-if = "1.0.0"
+tracing = "0.1.41"
+tracing-subscriber = "0.3.19"
