@@ -9,3 +9,4 @@
   * [`build`](./docker_compose/build_01/)
 * Rust
   * [建立 Rust 的靜態可執行文件](./rust/static_executable_01/)
+  * [Rust 編譯時移除死代碼](./rust/tree_shaking_01/)
