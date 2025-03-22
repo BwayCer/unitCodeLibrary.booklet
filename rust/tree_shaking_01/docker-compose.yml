@@ -1,0 +1,6 @@
+services:
+  main:
+    image: local/uc/rust/tree_shaking_01
+    build:
+      context: .
+      dockerfile: ./vmfile/main/Dockerfile
