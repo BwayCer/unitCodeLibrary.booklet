@@ -3,4 +3,17 @@ name = "link_lib"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+name = "ffi_test"
+crate-type = ["lib", "cdylib"]
+
+[[bin]]
+name = "generate_headers"
+required-features = ["headers"]
+
 [dependencies]
+clap = { version = "4.5.35", features = ["derive"] }
+safer-ffi = "0.1.13"
+
+[features]
+headers = ["safer-ffi/headers"]

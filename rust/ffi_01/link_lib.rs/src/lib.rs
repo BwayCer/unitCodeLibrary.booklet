@@ -1,14 +1,6 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+use safer_ffi::prelude::ffi_export;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+#[ffi_export]
+pub fn my_func_base() {
+    println!("This is the Base function in the DLL!");
 }
