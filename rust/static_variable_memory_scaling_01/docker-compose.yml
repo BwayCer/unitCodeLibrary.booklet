@@ -1,0 +1,14 @@
+services:
+  meminfo_fn:
+    image: local/uc/rust/static_variable_memory_scaling_01/meminfo_fn
+    build:
+      context: .
+      dockerfile: ./vmfile/main/Dockerfile
+
+  meminfo_struct:
+    image: local/uc/rust/static_variable_memory_scaling_01/meminfo_struct
+    build:
+      context: .
+      dockerfile: ./vmfile/main/Dockerfile
+      args:
+        features: meminfo-struct
