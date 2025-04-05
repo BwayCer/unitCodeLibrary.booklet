@@ -8,12 +8,21 @@ name = "ffi_test"
 crate-type = ["lib", "cdylib"]
 
 [[bin]]
+name = "test_lib"
+path = "./src/main.rs"
+required-features = ["bin-main"]
+
+[[bin]]
 name = "generate_headers"
-required-features = ["headers"]
+required-features = ["safer-ffi", "headers"]
 
 [dependencies]
 clap = { version = "4.5.35", features = ["derive"] }
+rand = "0.9.0"
 safer-ffi = "0.1.13"
 
 [features]
+no-mangle = []
+safer-ffi = []
+bin-main = []
 headers = ["safer-ffi/headers"]
