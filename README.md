@@ -11,3 +11,4 @@
   * [建立 Rust 的靜態可執行文件](./rust/static_executable_01/)
   * [Rust 靜態變數的記憶體收放](./rust/static_variable_memory_scaling_01/)
   * [Rust 編譯時移除死代碼](./rust/tree_shaking_01/)
+  * [Rust FFI](./rust/ffi_01/)
