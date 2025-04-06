@@ -1,4 +1,4 @@
-use safer_ffi::prelude::derive_ReprC;
+use safer_ffi::prelude::{c_slice, char_p, derive_ReprC};
 
 #[derive_ReprC]
 #[repr(u8)]
@@ -29,3 +29,6 @@ pub struct PureDataResult {
     pub rtn_enum: FruitEnum,
     pub rtn_yn: bool,
 }
+
+pub type LaunchEvent =
+    unsafe extern "C" fn(bool, bool, PureDataArgs, char_p::Box, c_slice::Box<i32>);

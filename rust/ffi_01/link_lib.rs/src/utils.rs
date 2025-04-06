@@ -1,8 +1,5 @@
 use rand::prelude::*;
 
-#[cfg(feature = "no-mangle")]
-use super::pub_no_mangle_c_type::FruitEnum;
-#[cfg(feature = "safer-ffi")]
 use super::pub_c_type::FruitEnum;
 
 pub struct RandomValue {
@@ -52,4 +49,37 @@ impl RandomValue {
             _ => FruitEnum::Orange,
         }
     }
+
+    pub fn gen_str(&mut self) -> String {
+        let mut txt = String::new();
+        for _ in 0..7 {
+            let s = self.rng.random_range(65..=90) as u8 as char;
+            txt.push(s);
+        }
+        txt
+    }
+
+    pub fn gen_array_i32(&mut self, len: usize) -> Vec<i32> {
+        let mut arr = Vec::<i32>::new();
+        for _ in 0..len {
+            let num = self.rng.random();
+            arr.push(num);
+        }
+        arr
+    }
+}
+
+pub fn mix_array(slice1: &[i32], slice2: &[i32]) -> Vec<i32> {
+    let end_slice = &[0, 0];
+    let add_vec = RandomValue::new().gen_array_i32(3);
+
+    let mix_vec: Vec<i32> = slice1
+        .iter()
+        .chain(slice2.iter())
+        .chain(end_slice.iter())
+        .chain(add_vec.iter())
+        .copied()
+        .collect();
+
+    mix_vec
 }
