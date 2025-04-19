@@ -11,8 +11,8 @@ struct InputArgs {
     #[arg(
         short,
         long = "file",
-        default_value = "LinkLib.h",
-        help = "Set a path name for generated headers (default: \"LinkLib.g.cs\" when lang = \"cs\")"
+        default_value = "",
+        help = "Set a path name for generated headers (default: \"LinkLib.h\" when lang = \"c\"; \"LinkLib.g.cs\" when lang = \"cs\")"
     )]
     file_path: String,
 
