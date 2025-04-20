@@ -198,7 +198,7 @@ class Program
         }
     }
 
-    static unsafe void CallConcatString(bool isTrace, bool isLeak)
+    static void CallConcatString(bool isTrace, bool isLeak)
     {
         string str1 = "Hello";
         string str2 = "World";
@@ -207,32 +207,22 @@ class Program
             Console.WriteLine($"Lang.cs: concat_string: call: {str1}, {str2}");
         }
 
-        // byte* argu1 = (byte*)Marshal.StringToHGlobalAnsi(str1);
-        // byte* argu2 = (byte*)Marshal.StringToHGlobalAnsi(str2);
-        // try {...} finally {
-        //     Marshal.FreeHGlobal((IntPtr)argu1);
-        //     Marshal.FreeHGlobal((IntPtr)argu2);
-        // }
-        // or
-        byte[] utf8Argu1 = Encoding.UTF8.GetBytes(str1);
-        byte[] utf8Argu2 = Encoding.UTF8.GetBytes(str2);
-        fixed (byte* argu1 = utf8Argu1)
-        fixed (byte* argu2 = utf8Argu2)
-        {
-            if (argu1 == null || argu2 == null) {
-                Console.WriteLine("Lang.cs: !!! Marshal.StringToHGlobalAnsi get null !!!");
-            }
+        byte[] bytes1 = Encoding.UTF8.GetBytes(str1);
+        byte[] bytes2 = Encoding.UTF8.GetBytes(str2);
+        IntPtr argu1 = Marshal.AllocHGlobal(bytes1.Length);
+        IntPtr argu2 = Marshal.AllocHGlobal(bytes2.Length);
+        try {
+            Marshal.Copy(bytes1, 0, argu1, bytes1.Length);
+            Marshal.WriteByte(argu1, bytes1.Length, 0);  // Null-terminate
 
-            byte* result = FfiTest.concat_string(isTrace, argu1, argu2);
-            if (result != null)
+            Marshal.Copy(bytes2, 0, argu2, bytes2.Length);
+            Marshal.WriteByte(argu2, bytes2.Length, 0);  // Null-terminate
+
+            IntPtr result = FfiTest.concat_string(isTrace, argu1, argu2);
+
+            if (result != IntPtr.Zero)
             {
-                int length = 0;
-                while (result[length] != 0)
-                {
-                    length++;
-                }
-                string resultStr = Encoding.UTF8.GetString(result, length);
-
+                string resultStr = Marshal.PtrToStringUTF8(result);
                 if (isTrace)
                 {
                     Console.WriteLine($"Lang.cs: concat_string: result: {resultStr}");
@@ -246,6 +236,9 @@ class Program
             {
                 Console.WriteLine("Lang.cs: concat_string: result: (null ptr)");
             }
+        } finally {
+            Marshal.FreeHGlobal(argu1);
+            Marshal.FreeHGlobal(argu2);
         }
     }
 
@@ -256,17 +249,13 @@ class Program
             Console.Write("[]");
             return;
         }
-        unsafe
-        {
-            int* ptr = slice.ptr;
-            Console.Write($"[{*ptr}");
-            for (ulong i = 1; i < slice.len; ++i)
-            {
-                ptr++;
-                Console.Write($", {*ptr}");
-            }
-            Console.Write("]");
-        }
+
+        int len = (int)slice.len;
+        int[] arr = new int[len];
+        // Marshal.Copy 把 "不受管理" 的 slice.ptr 複製到 "受管理" 陣列中
+        Marshal.Copy(slice.ptr, arr, 0, len);
+
+        Console.Write("[" + string.Join(", ", arr) + "]");
     }
 
     private static void PrintArrayBoxed(slice_boxed_int32_t slice)
@@ -276,58 +265,67 @@ class Program
             Console.Write("[]");
             return;
         }
-        unsafe
-        {
-            int* ptr = slice.ptr;
-            Console.Write($"[{*ptr}");
-            for (ulong i = 1; i < slice.len; ++i)
-            {
-                ptr++;
-                Console.Write($", {*ptr}");
-            }
-            Console.Write("]");
-        }
+
+        int len = (int)slice.len;
+        int[] arr = new int[len];
+        Marshal.Copy(slice.ptr, arr, 0, len);
+
+        Console.Write("[" + string.Join(", ", arr) + "]");
     }
 
-    public static unsafe void CallConcatArray(bool isTrace, bool isLeak)
+    public static void CallConcatArray(bool isTrace, bool isLeak)
     {
         int[] arr1 = { 4, 5, 6 };
-        slice_ref_int32_t argu1;
-        fixed (int* ptr1 = arr1)
-        {
-            argu1.ptr = ptr1;
-            argu1.len = (UIntPtr)arr1.Length;
-        }
-
         int[] arr2 = { 6, 7, 8, 9 };
-        slice_ref_int32_t argu2;
-        fixed (int* ptr2 = arr2)
+
+        int size1 = arr1.Length * sizeof(int);
+        // 配置 "不受管理" 的記憶體
+        IntPtr ptr1 = Marshal.AllocHGlobal(size1);
+        // 複製 "受管理" 的陣列到 "不受管理" 的記憶體
+        Marshal.Copy(arr1, 0, ptr1, arr1.Length);
+
+        slice_ref_int32_t argu1 = new slice_ref_int32_t
         {
-            argu2.ptr = ptr2;
-            argu2.len = (UIntPtr)arr2.Length;
-        }
+            ptr = ptr1,
+            len = (UIntPtr)arr1.Length
+        };
+
+        int size2 = arr2.Length * sizeof(int);
+        IntPtr ptr2 = Marshal.AllocHGlobal(size2);
+        Marshal.Copy(arr2, 0, ptr2, arr2.Length);
+
+        slice_ref_int32_t argu2 = new slice_ref_int32_t
+        {
+            ptr = ptr2,
+            len = (UIntPtr)arr2.Length
+        };
 
         if (isTrace)
         {
-            Console.Write("Lang.c: concat_array: call: ");
+            Console.Write("Lang.cs: concat_array: call: ");
             PrintArrayRef(argu1);
             Console.Write(", ");
             PrintArrayRef(argu2);
             Console.WriteLine();
         }
 
-        slice_boxed_int32_t result = FfiTest.concat_array(isTrace, argu1, argu2);
+        try {
+            slice_boxed_int32_t result = FfiTest.concat_array(isTrace, argu1, argu2);
 
-        if (isTrace)
-        {
-            Console.Write("Lang.c: concat_array: result: ");
-            PrintArrayBoxed(result);
-            Console.WriteLine();
-        }
+            if (isTrace)
+            {
+                Console.Write("Lang.cs: concat_array: result: ");
+                PrintArrayBoxed(result);
+                Console.WriteLine();
+            }
 
-        if (!isLeak && result.ptr != null)
-        {
-            FfiTest.free_array_i32(isTrace, result);
+            if (!isLeak && result.ptr != IntPtr.Zero)
+            {
+                FfiTest.free_array_i32(isTrace, result);
+            }
+        } finally {
+            Marshal.FreeHGlobal((IntPtr)argu1.ptr);
+            Marshal.FreeHGlobal((IntPtr)argu2.ptr);
         }
     }
 

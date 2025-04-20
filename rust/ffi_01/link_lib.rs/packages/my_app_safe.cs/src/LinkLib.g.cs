@@ -19,7 +19,7 @@ namespace LinkLib {
 using System;
 using System.Runtime.InteropServices;
 
-public unsafe partial class Ffi {
+public partial class Ffi {
     // 原本為:
     //   ```
     //   public partial class Ffi {
@@ -34,8 +34,8 @@ public unsafe partial class Ffi {
     private const string RustLib = "lib/FfiTest.so";
 }
 
-public unsafe partial class Ffi {
-    [DllImport(RustLib, ExactSpelling = true)] public static unsafe extern
+public partial class Ffi {
+    [DllImport(RustLib, ExactSpelling = true)] public static extern
     void base_func ();
 }
 
@@ -59,11 +59,11 @@ public unsafe partial class Ffi {
 /// use the <c>Option< slice_ptr<_> ></c> type.
 /// </summary>
 [StructLayout(LayoutKind.Sequential, Size = 16)]
-public unsafe struct slice_ref_int32_t {
+public struct slice_ref_int32_t {
     /// <summary>
     /// Pointer to the first element (if any).
     /// </summary>
-    public Int32 /*const*/ * ptr;
+    public IntPtr ptr;
 
     /// <summary>
     /// Element count
@@ -92,11 +92,11 @@ public unsafe struct slice_ref_int32_t {
 /// use the <c>Option< slice_ptr<_> ></c> type.
 /// </summary>
 [StructLayout(LayoutKind.Sequential, Size = 16)]
-public unsafe struct slice_boxed_int32_t {
+public struct slice_boxed_int32_t {
     /// <summary>
     /// Pointer to the first element (if any).
     /// </summary>
-    public Int32 * ptr;
+    public IntPtr ptr;
 
     /// <summary>
     /// Element count
@@ -104,8 +104,8 @@ public unsafe struct slice_boxed_int32_t {
     public UIntPtr len;
 }
 
-public unsafe partial class Ffi {
-    [DllImport(RustLib, ExactSpelling = true)] public static unsafe extern
+public partial class Ffi {
+    [DllImport(RustLib, ExactSpelling = true)] public static extern
     slice_boxed_int32_t concat_array (
         [MarshalAs(UnmanagedType.U1)]
         bool is_trace,
@@ -113,29 +113,29 @@ public unsafe partial class Ffi {
         slice_ref_int32_t argu2);
 }
 
-public unsafe partial class Ffi {
-    [DllImport(RustLib, ExactSpelling = true)] public static unsafe extern
-    byte * concat_string (
+public partial class Ffi {
+    [DllImport(RustLib, ExactSpelling = true)] public static extern
+    IntPtr concat_string (
         [MarshalAs(UnmanagedType.U1)]
         bool is_trace,
-        byte /*const*/ * argu1,
-        byte /*const*/ * argu2);
+        IntPtr argu1,
+        IntPtr argu2);
 }
 
-public unsafe partial class Ffi {
-    [DllImport(RustLib, ExactSpelling = true)] public static unsafe extern
+public partial class Ffi {
+    [DllImport(RustLib, ExactSpelling = true)] public static extern
     void free_array_i32 (
         [MarshalAs(UnmanagedType.U1)]
         bool is_trace,
         slice_boxed_int32_t array_boxed);
 }
 
-public unsafe partial class Ffi {
-    [DllImport(RustLib, ExactSpelling = true)] public static unsafe extern
+public partial class Ffi {
+    [DllImport(RustLib, ExactSpelling = true)] public static extern
     void free_string (
         [MarshalAs(UnmanagedType.U1)]
         bool is_trace,
-        byte * char_boxed);
+        IntPtr char_boxed);
 }
 
 public enum FruitEnum_t : byte {
@@ -147,7 +147,7 @@ public enum FruitEnum_t : byte {
 }
 
 [StructLayout(LayoutKind.Sequential, Size = 16)]
-public unsafe struct PureDataArgs_t {
+public struct PureDataArgs_t {
     public double argu_64;
 
     public Int32 argu_32;
@@ -158,7 +158,7 @@ public unsafe struct PureDataArgs_t {
 }
 
 [StructLayout(LayoutKind.Sequential, Size = 16)]
-public unsafe struct PureDataResult_t {
+public struct PureDataResult_t {
     public double rtn_64;
 
     public Int32 rtn_32;
@@ -171,8 +171,8 @@ public unsafe struct PureDataResult_t {
     public bool rtn_yn;
 }
 
-public unsafe partial class Ffi {
-    [DllImport(RustLib, ExactSpelling = true)] public static unsafe extern
+public partial class Ffi {
+    [DllImport(RustLib, ExactSpelling = true)] public static extern
     PureDataResult_t pure_data (
         [MarshalAs(UnmanagedType.U1)]
         bool is_trace,
