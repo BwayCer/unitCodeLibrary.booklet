@@ -4,3 +4,15 @@ services:
     build:
       context: .
       dockerfile: ./vmfile/main/Dockerfile
+  csharp_unsafe:
+    image: local/uc/rust/ffi_01/csharp_unsafe
+    build:
+      context: .
+      dockerfile: ./vmfile/main/csharp.dockerfile
+  csharp_safe:
+    image: local/uc/rust/ffi_01/csharp_safe
+    build:
+      context: .
+      dockerfile: ./vmfile/main/csharp.dockerfile
+      args:
+        project: my_app_safe.cs

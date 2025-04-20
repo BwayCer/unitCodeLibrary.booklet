@@ -2,7 +2,7 @@ ARG version=1.85-bookworm
 ARG debianVersion=12
 
 
-FROM rust:$version As builder
+FROM rust:$version AS builder
 COPY ./link_lib.rs /repo
 WORKDIR /repo
 RUN cargo run --features bin-main --release --bin test_lib

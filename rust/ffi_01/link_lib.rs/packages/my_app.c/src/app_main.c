@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include "LinkLib.h"
 
+bool strs_includes(char *[], int, const char*);
 void normal_operation(void);
 void test_memory_leak(bool, bool);
 char* get_proc_file_name(void);
@@ -26,11 +27,11 @@ void call_static_data(bool);
 int main(int argc, char *argv[]) {
     bool is_normal = true;
     if (argc > 1) {
-        bool is_trace = strcmp(argv[1], "--trace") == 0;
-        if (strcmp(argv[1], "-l") == 0 || strcmp(argv[1], "--leak") == 0) {
+        bool is_trace = strs_includes(argv, argc, "--trace");
+        if (strs_includes(argv, argc, "-l") || strs_includes(argv, argc, "--leak")) {
             is_normal = false;
             test_memory_leak(true, true);
-        } else if (strcmp(argv[1], "-t") == 0 || strcmp(argv[1], "--test") == 0) {
+        } else if (strs_includes(argv, argc, "-t") || strs_includes(argv, argc, "--test")) {
             is_normal = false;
             test_memory_leak(is_trace, false);
         }
@@ -39,6 +40,15 @@ int main(int argc, char *argv[]) {
         normal_operation();
     }
     return 0;
+}
+
+bool strs_includes(char *arr[], int len, const char *target) {
+    for (int i = 0; i < len; i++) {
+        if (strcmp(arr[i], target) == 0) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void normal_operation() {
@@ -350,7 +360,6 @@ void print_array_boxed(slice_boxed_int32_t slice) {
     }
     printf("]");
 }
-
 
 void call_concat_array(bool is_trace, bool is_leak) {
     int32_t arr1[] = {4, 5, 6};
