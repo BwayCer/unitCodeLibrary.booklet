@@ -361,7 +361,6 @@ void print_array_boxed(slice_boxed_int32_t slice) {
     printf("]");
 }
 
-
 void call_concat_array(bool is_trace, bool is_leak) {
     int32_t arr1[] = {4, 5, 6};
     slice_ref_int32_t argu1 = {arr1, sizeof(arr1) / sizeof(arr1[0])};
