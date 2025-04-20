@@ -5,7 +5,7 @@ Rust FFI
 ## 嘗試
 
 ```bash
-docker compose build
+docker compose build main
 
 docker run --rm -it local/uc/rust/ffi_01:latest
 # docker run --rm -it local/uc/rust/ffi_01:latest /app/myapp --test
@@ -99,3 +99,30 @@ LIST:
 
     Lang.rs: close_static
     ```
+
+
+## 補充 - C sharp
+
+```bash
+docker compose build csharp_unsafe
+
+docker run --rm -it local/uc/rust/ffi_01/csharp_unsafe:latest
+# 由於強制執行垃圾回收的效果不明顯, 改以 `--try-round <回合數>` (人工)觀察同操作下漲幅是否相同.
+# docker run --rm -it local/uc/rust/ffi_01/csharp_unsafe:latest /app/myapp --test --try-round 3
+# docker run --rm -it local/uc/rust/ffi_01/csharp_unsafe:latest /app/myapp --leak
+
+docker rmi local/uc/rust/ffi_01/csharp_unsafe:latest
+```
+
+不使用 `unsafe` 的範例：
+(修改內容見 [commit#7d37107](https://github.com/BwayCer/unitCodeLibrary.booklet/commit/7d37107))
+
+```bash
+docker compose build csharp_safe
+
+docker run --rm -it local/uc/rust/ffi_01/csharp_safe:latest
+# docker run --rm -it local/uc/rust/ffi_01/csharp_safe:latest /app/myapp --test --try-round 3
+# docker run --rm -it local/uc/rust/ffi_01/csharp_safe:latest /app/myapp --leak
+
+docker rmi local/uc/rust/ffi_01/csharp_safe:latest
+```
