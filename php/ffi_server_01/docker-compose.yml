@@ -1,0 +1,8 @@
+services:
+  apache:
+    image: local/uc/php/ffi_server_01
+    build:
+      context: .
+      dockerfile: ./vmfile/main/Dockerfile
+    ports:
+      - 8080:80

@@ -1,0 +1,9 @@
+RewriteEngine On
+
+RewriteRule ^home/?$ index.php [L]
+
+# 條件: 如果請求找不到目錄或文件才繼續
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+RewriteRule . public/index.php [L]
