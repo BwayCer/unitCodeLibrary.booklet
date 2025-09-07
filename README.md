@@ -12,3 +12,5 @@
   * [Rust 靜態變數的記憶體收放](./rust/static_variable_memory_scaling_01/)
   * [Rust 編譯時移除死代碼](./rust/tree_shaking_01/)
   * [Rust FFI](./rust/ffi_01/)
+* PHP
+  * [以 FFI 操控 PHP 頁面](./php/ffi_server_01/)
